@@ -32,9 +32,9 @@ var started = false;
 var win = false;
 
 /**
- * If CPU is enabled
+ * If gamemode is true, the winning condition is to make three in a row
  */
-var CPU = false;
+var gamemode = false;
 
 
 /**
@@ -47,14 +47,14 @@ function resetBoard() {
 
     for (var r = 0; r < b.rows(); r++) {
         for (var c = 0; c < b.cols(); c++) {
-            b.cell([r,c]).style({ background: "#d3d3d3"});
-            b.cell([r,c]).rid()
-            b.cell([r,c]).on("click", updateCell);
+            b.cell([r, c]).style({ background: "#d3d3d3" });
+            b.cell([r, c]).rid()
+            b.cell([r, c]).on("click", updateCell);
         }
-    }   
-    
+    }
 
     turn = true;
+    document.getElementById("turn").innerHTML = "It's Player 1's turn!";
 }
 
 /**
@@ -134,91 +134,122 @@ function getGameboard() {
 function winCheck() {
     var game = getGameboard();
 
-    // Check horizontal combinations
     for (var r = 0; r < game.length; r++) {
         for (var c = 0; c < game[r].length - 2; c++) {
-            if (game[r][c] !== "0" && game[r][c + 1] !== "0" && game[r][c + 2] !== "0" &&
-                game[r][c] !== game[r][c + 1] && 
-                game[r][c] !== game[r][c + 2] &&
-                game[r][c + 1] !== game[r][c + 2]
-            ) {
-                win = true;
-                document.getElementById("turn").innerHTML = "Player " + (turn ? "1" : "2") + " wins horizontally!";
-                b.cell([r,c]).style({ background: "#F0F0F0"});
-                b.cell([r,c+1]).style({ background: "#F0F0F0"});
-                b.cell([r,c+2]).style({ background: "#F0F0F0"});
-                return;
-            }
-        }
-    }
+            //Normal mode
+            if (!gamemode) {
 
-    // Check vertical combinations
-    for (var r = 0; r < game.length - 2; r++) {
-        for (var c = 0; c < game[r].length; c++) {
-            if (game[r][c] !== "0" && game[r + 1][c] !== "0" && game[r + 2][c] !== "0" &&
-                game[r][c] !== game[r + 1][c] && 
-                game[r][c] !== game[r + 2][c] &&
-                game[r + 1][c] !== game[r + 2][c]
-            ) {
-                win = true;
-                document.getElementById("turn").innerHTML = "Player " + (turn ? "1" : "2") + " wins vertically!";
-                b.cell([r,c]).style({ background: "#F0F0F0"});
-                b.cell([r+1,c]).style({ background: "#F0F0F0"});
-                b.cell([r+2,c]).style({ background: "#F0F0F0"});
-                return;
-            }
-        }
-    }
+                // Check horizontal combinations
+                if (game[r][c] !== "0" && game[r][c + 1] !== "0" && game[r][c + 2] !== "0" &&
+                    game[r][c] !== game[r][c + 1] &&
+                    game[r][c] !== game[r][c + 2] &&
+                    game[r][c + 1] !== game[r][c + 2]
+                ) {
+                    win = true;
+                    document.getElementById("turn").innerHTML = "Player " + (turn ? "1" : "2") + " wins horizontally!";
+                    b.cell([r, c]).style({ background: "#F0F0F0" });
+                    b.cell([r, c + 1]).style({ background: "#F0F0F0" });
+                    b.cell([r, c + 2]).style({ background: "#F0F0F0" });
+                    return;
+                }
+                // Check vertical combinations
+                if (game[r][c] !== "0" && game[r + 1][c] !== "0" && game[r + 2][c] !== "0" &&
+                    game[r][c] !== game[r + 1][c] &&
+                    game[r][c] !== game[r + 2][c] &&
+                    game[r + 1][c] !== game[r + 2][c]
+                ) {
+                    win = true;
+                    document.getElementById("turn").innerHTML = "Player " + (turn ? "1" : "2") + " wins vertically!";
+                    b.cell([r, c]).style({ background: "#F0F0F0" });
+                    b.cell([r + 1, c]).style({ background: "#F0F0F0" });
+                    b.cell([r + 2, c]).style({ background: "#F0F0F0" });
+                    return;
+                }
+                // Check diagonal combinations (top-left to bottom-right)
+                if (game[r][c] !== "0" && game[r + 1][c + 1] !== "0" && game[r + 2][c + 2] !== "0" &&
+                    game[r][c] !== game[r + 1][c + 1] &&
+                    game[r][c] !== game[r + 2][c + 2] &&
+                    game[r + 1][c + 1] !== game[r + 2][c + 2]
+                ) {
+                    win = true;
+                    document.getElementById("turn").innerHTML = "Player " + (turn ? "1" : "2") + " wins diagonally!";
+                    b.cell([r, c]).style({ background: "#F0F0F0" });
+                    b.cell([r + 1, c + 1]).style({ background: "#F0F0F0" });
+                    b.cell([r + 2, c + 2]).style({ background: "#F0F0F0" });
+                    return;
+                }
+                // Check diagonal combinations (top-right to bottom-left)
+                if (game[r][c] !== "0" && game[r + 1][c - 1] !== "0" && game[r + 2][c - 2] !== "0" &&
+                    game[r][c] !== game[r + 1][c - 1] &&
+                    game[r][c] !== game[r + 2][c - 2] &&
+                    game[r + 1][c - 1] !== game[r + 2][c - 2]
+                ) {
+                    win = true;
+                    document.getElementById("turn").innerHTML = "Player " + (turn ? "1" : "2") + " wins diagonally!";
+                    b.cell([r, c]).style({ background: "#F0F0F0" });
+                    b.cell([r + 1, c - 1]).style({ background: "#F0F0F0" });
+                    b.cell([r + 2, c - 2]).style({ background: "#F0F0F0" });
+                    return;
+                }
 
-    // Check diagonal combinations (top-left to bottom-right)
-    for (var r = 0; r < game.length - 2; r++) {
-        for (var c = 0; c < game[r].length - 2; c++) {
-            if (game[r][c] !== "0" && game[r + 1][c + 1] !== "0" && game[r + 2][c + 2] !== "0" &&
-                game[r][c] !== game[r + 1][c + 1] && 
-                game[r][c] !== game[r + 2][c + 2] &&
-                game[r + 1][c + 1] !== game[r + 2][c + 2]
-            ) {
-                win = true;
-                document.getElementById("turn").innerHTML = "Player " + (turn ? "1" : "2") + " wins diagonally!";
-                b.cell([r,c]).style({ background: "#F0F0F0"});
-                b.cell([r+1,c+1]).style({ background: "#F0F0F0"});
-                b.cell([r+2,c+2]).style({ background: "#F0F0F0"});
-                return;
-            }
-        }
-    }
+            } else { //Gamemode is true
 
-    // Check diagonal combinations (top-right to bottom-left)
-    for (var r = 0; r < game.length - 2; r++) {
-        for (var c = 2; c < game[r].length; c++) {
-            if (game[r][c] !== "0" && game[r + 1][c - 1] !== "0" && game[r + 2][c - 2] !== "0" &&
-                game[r][c] !== game[r + 1][c - 1] && 
-                game[r][c] !== game[r + 2][c - 2] &&
-                game[r + 1][c - 1] !== game[r + 2][c - 2]
-            ) {
-                win = true;
-                document.getElementById("turn").innerHTML = "Player " + (turn ? "1" : "2") + " wins diagonally!";
-                b.cell([r,c]).style({ background: "#F0F0F0"});
-                b.cell([r+1,c-1]).style({ background: "#F0F0F0"});
-                b.cell([r+2,c-2]).style({ background: "#F0F0F0"});
-                return;
+                // Check horizontal combinations
+                if (game[r][c] !== "0" && game[r][c] === game[r][c + 1] && game[r][c] === game[r][c + 2]) {
+                    win = true;
+                    document.getElementById("turn").innerHTML = "Player " + (turn ? "1" : "2") + " wins horizontally!";
+                    b.cell([r, c]).style({ background: "#F0F0F0" });
+                    b.cell([r, c + 1]).style({ background: "#F0F0F0" });
+                    b.cell([r, c + 2]).style({ background: "#F0F0F0" });
+                    return;
+                }
+
+                // Check vertical combinations
+                if (game[r][c] !== "0" && game[r][c] === game[r + 1][c] && game[r][c] === game[r + 2][c]) {
+                    win = true;
+                    document.getElementById("turn").innerHTML = "Player " + (turn ? "1" : "2") + " wins vertically!";
+                    b.cell([r, c]).style({ background: "#F0F0F0" });
+                    b.cell([r + 1, c]).style({ background: "#F0F0F0" });
+                    b.cell([r + 2, c]).style({ background: "#F0F0F0" });
+                    return;
+                }
+
+                // Check diagonal combinations (top-left to bottom-right)
+                if (game[r][c] !== "0" && game[r][c] === game[r + 1][c + 1] && game[r][c] === game[r + 2][c + 2]) {
+                    win = true;
+                    document.getElementById("turn").innerHTML = "Player " + (turn ? "1" : "2") + " wins diagonally!";
+                    b.cell([r, c]).style({ background: "#F0F0F0" });
+                    b.cell([r + 1, c + 1]).style({ background: "#F0F0F0" });
+                    b.cell([r + 2, c + 2]).style({ background: "#F0F0F0" });
+                    return;
+                }
+
+                // Check diagonal combinations (top-right to bottom-left)
+                if (game[r][c] !== "0" && game[r][c] === game[r + 1][c - 1] && game[r][c] === game[r + 2][c - 2]) {
+                    win = true;
+                    document.getElementById("turn").innerHTML = "Player " + (turn ? "1" : "2") + " wins diagonally!";
+                    b.cell([r, c]).style({ background: "#F0F0F0" });
+                    b.cell([r + 1, c - 1]).style({ background: "#F0F0F0" });
+                    b.cell([r + 2, c - 2]).style({ background: "#F0F0F0" });
+                    return;
+                }
             }
         }
     }
-   
 }
 
 /**
  * Init table to an Empty table
- * @param {int} size Size of the table (Default 5)
+ * @param {int} height of the table (Default 3)
+ * @param {int} length Length of the table (Default 4)
  */
-function initTable(size = 5) {
+function initTable(height = 3, length = 4) {
     var table = document.getElementById("game");
     while (table.rows.length > 0) {
         table.deleteRow(0);
     }
 
-    b = jsboard.board({ attach: "game", size: `${size}x${size}` });
+    b = jsboard.board({ attach: "game", size: `${height}x${length}` });
     b.cell("each").style({ width: "65px", height: "65px" });
     started = false;
     resetBoard();
@@ -228,6 +259,8 @@ function initTable(size = 5) {
 
 //Listeners for UI buttons
 document.getElementById("reset").addEventListener("click", function () { resetBoard(); });
+
+//Normal Gamemode
 document.getElementById("gamemodeN").addEventListener("click", function () {
     gamemode = false;
     resetBoard();
@@ -235,31 +268,26 @@ document.getElementById("gamemodeN").addEventListener("click", function () {
     document.getElementById("gamemodeI").disabled = false;
 
 });
+
+//BGG Gamemode
 document.getElementById("gamemodeI").addEventListener("click", function () {
     gamemode = true;
     resetBoard();
     this.disabled = true;
     document.getElementById("gamemodeN").disabled = false;
 });
-document.getElementById("size5").addEventListener("click", function () {
+
+//Size buttons
+document.getElementById("size34").addEventListener("click", function () {
     initTable();
     this.disabled = true;
-    document.getElementById("size7").disabled = false;
+    document.getElementById("size33").disabled = false;
 });
-document.getElementById("size7").addEventListener("click", function () {
-    initTable(7);
+document.getElementById("size33").addEventListener("click", function () {
+    initTable(3, 3);
     this.disabled = true;
-    document.getElementById("size5").disabled = false;
+    document.getElementById("size34").disabled = false;
 });
-document.getElementById("CPU").addEventListener("click", function () {
-    CPU = true;
-    this.disabled = true;
-    document.getElementById("2P").disabled = false;
-});
-document.getElementById("2P").addEventListener("click", function () {
-    CPU = false;
-    this.disabled = true;
-    document.getElementById("CPU").disabled = false;
-});
+
 // create board
-initTable();  // 5x5 board
+initTable();  // 3x4 board

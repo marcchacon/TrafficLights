@@ -1,18 +1,15 @@
-# NeutronBoardGame
-This is a JavaScript code to play a very unknown game called [Neutron](https://boardgamegeek.com/boardgame/6978/neutron).
-You can play it [here](https://marcchacon.github.io/NeutronBoardGame/)!
+# Traffic Lights
+This is a JavaScript code to play a very unknown game called [Traffic Lights](https://boardgamegeek.com/boardgame/1893/traffic-lights).
+You can play it [here](https://marcchacon.github.io/TrafficLights/)!
 
 Thanks to @danielborowski for creating [jsboard](https://github.com/danielborowski/jsboard)!
 
 ## Rules
-### Moves
-The turn consists in two actions: First you move the Neutron (the middle piece), in any direction and always to the end (occupied space or end of the board). Then move your pieces, following the same pattern.
-I know BGG mentions a slightly different rules, but this is how I play with my friends.
+### Turn 
+In your turn you can choose between to actions:
+- Place a piece: You can place a piece on an empty space
+- Upgrade a piece: You can upgrade one piece (doesn't matter who place it). A Red piece becomes yellow, and a Yellow becomes a green one. A Green piece cannot be upgraded.
 ### Winning condition
-The main game consists on moving the common piece to your space. Your space consists of the initial row your pieces start at. If You can't move the Neutron on your turn, you lose.
-### Inverted Game Mode
-In this mode, you have to place the Neutron in the other's field! It's a small change, but it changes the perspective of the game.
-
-## 7x7 Board
-In this mode, there are two Neutrons, something that can make the game a bit more challenging!
-<sub>There's a way that P1 always wins at turn 2
+The first player to make three in a row with diferent pieces wins. The order does not matter.
+### Alternative Game Mode
+In this mode (the rules on bgg) the winning condition changes: You have to make three in a row of the same color!
